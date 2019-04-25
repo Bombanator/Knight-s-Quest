@@ -10,6 +10,13 @@
   margin: auto;
 }
 
+body { 
+  background: url("8a79ae60c65c025c65d1e9a70fdacd95.jpg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 
 .Title {
   text-align: center;
