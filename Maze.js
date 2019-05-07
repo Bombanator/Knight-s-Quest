@@ -106,10 +106,6 @@ function Cell(i, j) {
     //rect(x,y,w,w);
   };
   
- 
 }
   
- 
-}
-
-
+//window.onload(setup, draw, Cell);
