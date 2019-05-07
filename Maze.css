@@ -1,6 +1,6 @@
 .lw { font-size: 60px; }
 
-#MazeCanvas {
+/*#MazeCanvas {
   border:1px solid #000000;
   position: absolute;
   top:0;
@@ -10,7 +10,7 @@
   margin: auto;
   z-index: 2;
   background: #cdcdcd;
-}
+}*/
 
 body { 
   background: url(8a79ae60c65c025c65d1e9a70fdacd95.jpg) no-repeat center center fixed; 
