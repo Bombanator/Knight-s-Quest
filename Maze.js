@@ -92,13 +92,29 @@ function draw() {
 function Cell(i, j) {
   this.i = i;
   this.j = j;
+  this.walls = [true, true, true, false]; //true means wall is there. Now every cell starts off with all its walls being shown. Order of walls is top right bottom left.
   
   this.show = function() {
     var x = this.i*w;
     var y = this.j*w;
     stroke(255);
-    line(x,y,x+w,y); //drawing walls
-    line(x+w,y,x+w,y);
+    if (this.walls[0]) {
+      line(x,y,x+w,y); //drawing walls
+    }
+    if (this.walls[1]) {
+      line(x+w,y,x+w,y+w);
+    }
+    if (this.walls[2]) {
+      line(x+w,y+w,x,y+w);
+    }
+    if (this.walls[3]) {
+      line(x,y+w,x,y);
+    }
+    
+    //all four walls. each "line function" represents a wall. The numbers go with the array of "true"'s.
+    
+    
+    
     
     
     
@@ -107,5 +123,3 @@ function Cell(i, j) {
   };
   
 }
-  
-//window.onload(setup, draw, Cell);
