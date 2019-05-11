@@ -21,12 +21,13 @@
   //ctx.fillRect(this.x, this.y, this.width, this.height);
 //}
 
-
 var cols, rows;
-var d = 40; //cells are a square, meaning they have equal dimensions. If their width/height is 40, that mean there are 10 cells per column and row. d means dimension of cell
+var d = 20; //cells are a square, meaning they have equal dimensions. If their width/height is 40, that mean there are 10 cells per column and row. d means dimension of cell
 var grid = [];
 
 var current; //currently being visited cell
+
+var stack = []; //a stack is an array, but it is "stacked". This means that the first object/index is at the bottom of the pile. This means that the newer items are pushed upwards to the top of the stack. We use the stack when the cursor gets stuck, so it could backtrack to cells it already visited before, and continue generating the maze. We get stuck when there are no neighboring unvisited cells.
 
 function setup() {
   createCanvas(400, 400); //a p5 only function
@@ -60,15 +61,18 @@ function draw() { //a p5 only function
 
   current.visited = true;
   current.highlight();
-  //step 1
+
   var next = current.checkNeighbors();
   if (next) {
     next.visited = true;
-    //step 3
+
+    stack.push(current);
+
     removeWalls(current, next); //removing walls to create maze
 
-    //step 4
     current = next; //this code means that we are in a current cell and we are looking for an unvisited neighbor, and then we go and visit that one
+  } else if (stack.length > 0) { //we can only use stack if it is not empty
+    current = stack.pop(); //go to stack and you get a new "current" spot
   }
 
 }
@@ -167,13 +171,5 @@ function removeWalls(a, b) { // two adjacent cells
     a.walls[2] = false;
     b.walls[0] = false;
   }
-
-
-
-
-
-
-
-
 
 }
