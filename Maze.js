@@ -30,9 +30,9 @@ var current; //currently being visited cell
 
 function setup() {
   createCanvas(400, 400); //a p5 only function
-  cols = floor(width/d); //width of the canvas divided by the width equals number of columns
+  cols = floor(width/d); //width of the canvas divided by the width equals number of columns: number of square cells at the top/same for height
   rows = floor(height/d); //floor deals with math, makes the console know we are dealing with intergers, numbers are integers
-  frameRate(5)
+  //frameRate(5)
 
   for (var r = 0; r < rows; r++) {   //row generator
     for (var c = 0; c < cols; c++) { //column generator
@@ -59,9 +59,15 @@ function draw() { //a p5 only function
   }
 
   current.visited = true;
+  current.highlight();
+  //step 1
   var next = current.checkNeighbors();
   if (next) {
     next.visited = true;
+    //step 3
+    removeWalls(current, next); //removing walls to create maze
+
+    //step 4
     current = next; //this code means that we are in a current cell and we are looking for an unvisited neighbor, and then we go and visit that one
   }
 
@@ -102,6 +108,13 @@ function Cell(c, r) {
     }
 
   }
+  this.highlight = function() {
+    var x = this.c*d;
+    var y = this.r*d;
+    noStroke();
+    fill(0, 0, 255, 100);
+    rect(x,y,d,d);
+  }
 
   this.show = function() {
     var x = this.c*d;
@@ -123,10 +136,44 @@ function Cell(c, r) {
     //each "line function" represents a wall of a cell. Order of walls: top, right, bottom, left = 0,1,2,3
 
     if (this.visited) {
+      noStroke();
       fill(220,20,60,100); //colour of cells that are visited
       rect(x,y,d,d);
     }
 
   };
+
+}
+
+
+
+
+function removeWalls(a, b) { // two adjacent cells
+
+  var x = a.c - b.c; //if we have 2 cells next to each other from their sides, this means in order to remove walls, we have to take the left wall out of the first cell and the right wall of the adjacent (second) cell
+  if (x === 1) { //in order for x to equal one, we have to make the x value equal one, we need to take the column (c) value of the "a" cell (which is bigger, because it is the adjacent cell on the left) and subtract it by the column (c) value of the "b" cell. The value of x is the difference between cell a and b
+    a.walls[3] = false; //remember that number 1 is the right wall and number 3 is the left wall
+    b.walls[1] = false;
+    console.log(a);
+  } else if (x === -1) {
+    a.walls[1] = false;
+    b.walls[3] = false;
+  }
+  var y = a.r - b.r; //same thing but for the rows
+  if (y === 1) { //same thing of x applies for y
+    a.walls[0] = false; //number 0 is top wall, number 2 is bottom wall
+    b.walls[2] = false;
+  } else if (y === -1) {
+    a.walls[2] = false;
+    b.walls[0] = false;
+  }
+
+
+
+
+
+
+
+
 
 }
