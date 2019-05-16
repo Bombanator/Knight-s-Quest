@@ -15,14 +15,18 @@
   //this.width = width;
   //this.height = height;
   //this.x = x;
-  //this.y = y; 
+  //this.y = y;
   //ctx = myGameArea.context;
   //ctx.fillStyle = color;
   //ctx.fillRect(this.x, this.y, this.width, this.height);
 //}
 
+
+var knight = document.getElementById("knight");
+var canvasContainer = document.getElementById("defaultCanvas0");
+var intialPosition = 0;
 var cols, rows;
-var d = 20; //cells are a square, meaning they have equal dimensions. If their width/height is 40, that mean there are 10 cells per column and row. d means dimension of cell
+var d = 25; //This is the dimenstion of the cell (width and height). Cells are a square, meaning they have equal dimensions. If their width/height is 40, that mean there are 10 cells per column and row. d means dimension of cell
 var grid = [];
 
 var current; //currently being visited cell
@@ -33,7 +37,7 @@ function setup() {
   createCanvas(400, 400); //a p5 only function
   cols = floor(width/d); //width of the canvas divided by the width equals number of columns: number of square cells at the top/same for height
   rows = floor(height/d); //floor deals with math, makes the console know we are dealing with intergers, numbers are integers
-  //frameRate(5)
+  frameRate(-60)
 
   for (var r = 0; r < rows; r++) {   //row generator
     for (var c = 0; c < cols; c++) { //column generator
@@ -91,7 +95,7 @@ function Cell(c, r) {
     var bottom = grid[index(c, r+1)];
     var left = grid[index(c-1, r)];
 
-    if (top && !top.visited) {
+    if (top && !top.visited) {         //this code explains the path the "cursor" takes
       neighbors.push(top);
     }
     if (right && !right.visited) {
@@ -111,16 +115,16 @@ function Cell(c, r) {
       return undefined;
     }
 
-  }
-  this.highlight = function() {
+  };
+  this.highlight = function() { //cursor: the current cell being visited
     var x = this.c*d;
     var y = this.r*d;
     noStroke();
-    fill(0, 0, 255, 100);
+    fill(0, 0, 255, 100); //color of cursor
     rect(x,y,d,d);
-  }
+  };
 
-  this.show = function() {
+  this.show = function() {   //this function draws the walls of the maze
     var x = this.c*d;
     var y = this.r*d;
     stroke(255);
@@ -173,3 +177,23 @@ function removeWalls(a, b) { // two adjacent cells
   }
 
 }
+
+function motion(m){ //the m is an abbreivation of motion.
+
+//alert(e.keyCode); I used this code to find out the Key code of the arrow keys. Up arrow key: 38, Down arrow key: 40, left arrow key: 37, right arrow key: 39
+
+if(m.keyCode==39){
+  intialPosition +=2;
+  knight.style.left = intialPosition + "px";
+}
+if(m.keyCode==37){
+  initialPosition -=2;
+  knight.style.left = initialPosition + "px";
+}
+
+
+
+
+}
+
+document.onkeydown = motion;
