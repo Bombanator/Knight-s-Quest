@@ -21,10 +21,6 @@
   //ctx.fillRect(this.x, this.y, this.width, this.height);
 //}
 
-
-var knight = document.getElementById("knight");
-var canvasContainer = document.getElementById("defaultCanvas0");
-var intialPosition = 0;
 var cols, rows;
 var d = 25; //This is the dimenstion of the cell (width and height). Cells are a square, meaning they have equal dimensions. If their width/height is 40, that mean there are 10 cells per column and row. d means dimension of cell
 var grid = [];
@@ -178,22 +174,25 @@ function removeWalls(a, b) { // two adjacent cells
 
 }
 
-function motion(m){ //the m is an abbreivation of motion.
-
+//motion
 //alert(e.keyCode); I used this code to find out the Key code of the arrow keys. Up arrow key: 38, Down arrow key: 40, left arrow key: 37, right arrow key: 39
 
-if(m.keyCode==39){
-  intialPosition +=2;
-  knight.style.left = intialPosition + "px";
+
+//var container = document.getElementById("defaultCanvas0");
+var knightLeft = 0;
+var y = 0;
+function anim(e) { //(e) is the shortcut for the "anim" function
+if (e.keyCode == 39) {
+knightLeft += 2; document.getElementById("knight").style.left = knightLeft + "px";
 }
-if(m.keyCode==37){
-  initialPosition -=2;
-  knight.style.left = initialPosition + "px";
+else if (e.keyCode == 37) {
+knightLeft -= 2; document.getElementById("knight").style.left = knightLeft + "px";
+}
+else if (e.keyCode == 40) {
+y += 2; document.getElementById("knight").style.top = y + "px";
+}
+else if (e.keyCode == 38) {
+y -= 2; document.getElementById("knight").style.top = y + "px";
 }
 
-
-
-
-}
-
-document.onkeydown = motion;
+} document.onkeydown = anim;
