@@ -181,18 +181,25 @@ function removeWalls(a, b) { // two adjacent cells
 //var container = document.getElementById("defaultCanvas0");
 var knightLeft = 0;
 var y = 0;
-function anim(e) { //(e) is the shortcut for the "anim" function
-if (e.keyCode == 39) {
-knightLeft += 2; document.getElementById("knight").style.left = knightLeft + "px";
-}
-else if (e.keyCode == 37) {
-knightLeft -= 2; document.getElementById("knight").style.left = knightLeft + "px";
-}
-else if (e.keyCode == 40) {
-y += 2; document.getElementById("knight").style.top = y + "px";
-}
-else if (e.keyCode == 38) {
-y -= 2; document.getElementById("knight").style.top = y + "px";
-}
 
-} document.onkeydown = anim;
+var knight = document.getElementById("knight");
+knight.style.left = x_pos+"px";
+knight.style.top = y_pos+"px";
+
+if (document.getElementById("knight").position=false) {
+  function anim(e) { //(e) is the shortcut for the "anim" function
+  if (e.keyCode == 39) {
+  knightLeft += 2; document.getElementById("knight").style.left = knightLeft + "px";
+  }
+  else if (e.keyCode == 37) {
+  knightLeft -= 2; document.getElementById("knight").style.left = knightLeft + "px";
+  }
+  else if (e.keyCode == 40) {
+  y += 2; document.getElementById("knight").style.top = y + "px";
+  }
+  else if (e.keyCode == 38) {
+  y -= 2; document.getElementById("knight").style.top = y + "px";
+  }
+
+  } document.onkeydown = anim;
+}
