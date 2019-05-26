@@ -2,17 +2,6 @@
 font-family: 'Press Start 2P', cursive;
 }
 
-#knight {
-  position:absolute;
-  height: 19px;
-  width: 19px;
-  border: 1px solid transparent;
-  background-color: yellow;
-  z-index: 10;
-  left: 0;
-  top: 0;
-}
-
 #defaultCanvas0 { /*I looked at my html file on the browser's inspect function, and I saw that the javascript canvas had an id called defaultCanvas0, I can use that id to make css changes to the canvas, such as centerizing it. */
   border: 1px solid #000000;
   position: absolute;
@@ -33,6 +22,17 @@ body {
   background-size: cover;
 }
 
-.Title {
-  text-align: center;
+h1 {
+  width: 75%;
+  position: fixed;
+  left: 50%;
+  margin-left: -17.9%;
+}
+
+h3 {
+  width: 75%;
+  position: fixed;
+  left: 50%;
+  margin-top: 6%;
+  margin-left: -12.5%;
 }
