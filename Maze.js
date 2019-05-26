@@ -9,8 +9,11 @@ var relic; //the end goal (ending point)
 
 var highlightShow = true; //we want the cursor highlight to show at first, but once the maze is generated, we want it to go away
 
+
 function setup() {
   createCanvas(400, 400); //a p5 only function
+  //img = loadImage("https://www.pixilart.com/images/art/6cb07882c773d2c.png?v=1541820224"); this did not work
+  steps = 0;
   cols = floor(width/d); //width of the canvas divided by the width equals number of columns: number of square cells at the top/same for height
   rows = floor(height/d); //floor deals with math, makes the console know we are dealing with intergers, numbers are integers
   frameRate(-60)//how fast the maze is generated
@@ -137,8 +140,9 @@ function Cell(c, r) {
       var x = this.c*d;
       var y = this.r*d;
 
+      //image(img, x+5, y+5, d-10, d-10); this did not work
       noStroke();
-      fill(20, 240, 30);
+      fill(169,169,169);
       rect(x+5,y+5,d-10,d-10);
     }
   }
@@ -218,6 +222,6 @@ function keyTyped() { //alert(e.keyCode); I used this code to find out the Key c
   }
 
   if (knight === relic) {
-    alert("You have retrieved the relic. Your quest is complete.")
+    alert("You have retrieved the relic, your quest is complete. Reload the page to play again.");
   }
 }
