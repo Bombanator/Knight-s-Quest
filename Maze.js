@@ -1,39 +1,19 @@
-//const startButton = document.querySelector("#startButton")
-
-
-
-//startButton.addEventListener("click", startGame);
-
-//var KnightQuest;
-
-//function startGame() {
-  //GameSpace.start();
-  //KnightQuest = new component(30, 30, "red", 10, 120);
-//}
-
-//function component(width, height, color, x, y) {
-  //this.width = width;
-  //this.height = height;
-  //this.x = x;
-  //this.y = y;
-  //ctx = myGameArea.context;
-  //ctx.fillStyle = color;
-  //ctx.fillRect(this.x, this.y, this.width, this.height);
-//}
-
 var cols, rows;
 var d = 25; //This is the dimenstion of the cell (width and height). Cells are a square, meaning they have equal dimensions. If their width/height is 40, that mean there are 10 cells per column and row. d means dimension of cell
 var grid = [];
+var stack = []; //a stack is an array, but it is "stacked". This means that the first object/index is at the bottom of the pile. This means that the newer items are pushed upwards to the top of the stack. We use the stack when the cursor gets stuck, so it could backtrack to cells it already visited before, and continue generating the maze. We get stuck when there are no neighboring unvisited cells.
 
 var current; //currently being visited cell
+var knight; //the player
+var relic; //the end goal (ending point)
 
-var stack = []; //a stack is an array, but it is "stacked". This means that the first object/index is at the bottom of the pile. This means that the newer items are pushed upwards to the top of the stack. We use the stack when the cursor gets stuck, so it could backtrack to cells it already visited before, and continue generating the maze. We get stuck when there are no neighboring unvisited cells.
+var highlightShow = true; //we want the cursor highlight to show at first, but once the maze is generated, we want it to go away
 
 function setup() {
   createCanvas(400, 400); //a p5 only function
   cols = floor(width/d); //width of the canvas divided by the width equals number of columns: number of square cells at the top/same for height
   rows = floor(height/d); //floor deals with math, makes the console know we are dealing with intergers, numbers are integers
-  frameRate(-60)
+  frameRate(-60)//how fast the maze is generated
 
   for (var r = 0; r < rows; r++) {   //row generator
     for (var c = 0; c < cols; c++) { //column generator
@@ -41,9 +21,9 @@ function setup() {
       grid.push(cell);
     }
   }
-
   current = grid[0]; //has to do with where the maze starts and ends
-
+  knight = grid[0];
+  relic = grid[index(14,14)];
 }
 
 function index(c, r) { //shortcut
@@ -54,27 +34,26 @@ function index(c, r) { //shortcut
 }
 
 function draw() { //a p5 only function
-  background(51);
+  background(51); //colour of grid background (grey)
   for (var c = 0; c < grid.length; c++) {
     grid[c].show();
   }
 
+  knight.visible(); //creates knight character (after all cells are visited)
+  relic.visible1(); //same but for relic
+
   current.visited = true;
   current.highlight();
-
   var next = current.checkNeighbors();
   if (next) {
     next.visited = true;
 
     stack.push(current);
 
-    removeWalls(current, next); //removing walls to create maze
+    removeLine(current, next); //removing walls to create maze
 
     current = next; //this code means that we are in a current cell and we are looking for an unvisited neighbor, and then we go and visit that one
-  } else if (stack.length > 0) { //we can only use stack if it is not empty
-    current = stack.pop(); //go to stack and you get a new "current" spot
   }
-
 }
 
 function Cell(c, r) {
@@ -82,6 +61,36 @@ function Cell(c, r) {
   this.r = r;
   this.walls = [true, true, true, true]; //true means wall is there. Now every cell starts off with all its walls being shown. Order of walls is top right bottom left.
   this.visited = false; //this variable keeps count if a cell has been visited or not. Every cell starts off as being not visited.
+
+  this.show = function() {   //this function draws the walls of the maze
+    var x = this.c*d;
+    var y = this.r*d;
+
+    stroke(255);
+
+    //drawing walls
+
+    if (this.walls[0]) {
+      line(x,y,x+d,y); //top
+    }
+    if (this.walls[1]) {
+      line(x+d,y,x+d,y+d); //right
+    }
+    if (this.walls[2]) {
+      line(x,y+d,x+d,y+d);//line(x+d,y+d,x,y+d); //bottom
+    }
+    if (this.walls[3]) {
+      line(x,y,x,y+d);//line(x,y+d,x,y); //left
+    }
+    //each "line function" represents a wall of a cell. Order of walls: top, right, bottom, left = 0,1,2,3
+
+    if (this.visited) { //the visited cells, or the path of visited cells
+      noStroke();
+      fill(220,20,60,100); //colour of cells that are visited
+      rect(x,y,d,d);
+    }
+  }
+
 
   this.checkNeighbors = function() { //the currently visited cell in comparison to its neighbouring cells that aren't visited.
     var neighbors = [];
@@ -108,52 +117,70 @@ function Cell(c, r) {
       var e = floor(random(0, neighbors.length));
       return neighbors[e];
     } else {
-      return undefined;
+       backTrack(); //this piece of coding is the "recursive backtracker". It makes the cursor go back to its previous visited cells and find a new path towards unvisited cells
     }
+  }
 
-  };
   this.highlight = function() { //cursor: the current cell being visited
-    var x = this.c*d;
-    var y = this.r*d;
-    noStroke();
-    fill(0, 0, 255, 100); //color of cursor
-    rect(x,y,d,d);
-  };
+    if (highlightShow){ //when highlightShow is not true anymore it will not show anymore.
+      var x = this.c*d;
+      var y = this.r*d;
 
-  this.show = function() {   //this function draws the walls of the maze
-    var x = this.c*d;
-    var y = this.r*d;
-    stroke(255);
-    if (this.walls[0]) {
-      line(x,y,x+d,y); //drawing walls
-    }
-    if (this.walls[1]) {
-      line(x+d,y,x+d,y+d);
-    }
-    if (this.walls[2]) {
-      line(x+d,y+d,x,y+d);
-    }
-    if (this.walls[3]) {
-      line(x,y+d,x,y);
-    }
-
-    //each "line function" represents a wall of a cell. Order of walls: top, right, bottom, left = 0,1,2,3
-
-    if (this.visited) {
       noStroke();
-      fill(220,20,60,100); //colour of cells that are visited
+      fill(0, 0, 255, 100); //color of cursor
       rect(x,y,d,d);
     }
+  }
 
-  };
+  this.visible = function() { //this makes the knight (player) character visible
+    if(allVisited()) {
+      var x = this.c*d;
+      var y = this.r*d;
 
+      noStroke();
+      fill(20, 240, 30);
+      rect(x+5,y+5,d-10,d-10);
+    }
+  }
+
+  this.visible1 = function() { //this makes the relic (end point) visible
+    if(allVisited()) {
+      var x = this.c*d;
+      var y = this.r*d;
+
+      noStroke();
+      fill(255, 206, 4);
+      rect(x+5,y+5,d-10,d-10);
+    }
+  }
+}
+
+backTrack = function() { //recursive backtracking code
+  if (!allVisited()) {
+    stack.pop();
+    current = stack[stack.length-1];
+  }else{
+    highlightShow = false;
+  }
+}
+
+allVisited = function() { //makes player and relic appear by saying all cells are checked.
+  var completed = true;
+  for (var c = 0; c < grid.length-1; c++) {
+    if (!grid[c].visited) {
+      completed = false;
+    }
+  }
+  if (completed) {
+    return true;
+  }else{
+    return false;
+  }
 }
 
 
 
-
-function removeWalls(a, b) { // two adjacent cells
-
+removeLine = function(a, b) {  // two adjacent cells
   var x = a.c - b.c; //if we have 2 cells next to each other from their sides, this means in order to remove walls, we have to take the left wall out of the first cell and the right wall of the adjacent (second) cell
   if (x === 1) { //in order for x to equal one, we have to make the x value equal one, we need to take the column (c) value of the "a" cell (which is bigger, because it is the adjacent cell on the left) and subtract it by the column (c) value of the "b" cell. The value of x is the difference between cell a and b
     a.walls[3] = false; //remember that number 1 is the right wall and number 3 is the left wall
@@ -171,35 +198,26 @@ function removeWalls(a, b) { // two adjacent cells
     a.walls[2] = false;
     b.walls[0] = false;
   }
-
 }
 
+
 //motion
-//alert(e.keyCode); I used this code to find out the Key code of the arrow keys. Up arrow key: 38, Down arrow key: 40, left arrow key: 37, right arrow key: 39
-
-
-//var container = document.getElementById("defaultCanvas0");
-var knightLeft = 0;
-var y = 0;
-
-var knight = document.getElementById("knight");
-knight.style.left = x_pos+"px";
-knight.style.top = y_pos+"px";
-
-if (document.getElementById("knight").position=false) {
-  function anim(e) { //(e) is the shortcut for the "anim" function
-  if (e.keyCode == 39) {
-  knightLeft += 2; document.getElementById("knight").style.left = knightLeft + "px";
-  }
-  else if (e.keyCode == 37) {
-  knightLeft -= 2; document.getElementById("knight").style.left = knightLeft + "px";
-  }
-  else if (e.keyCode == 40) {
-  y += 2; document.getElementById("knight").style.top = y + "px";
-  }
-  else if (e.keyCode == 38) {
-  y -= 2; document.getElementById("knight").style.top = y + "px";
+function keyTyped() { //alert(e.keyCode); I used this code to find out the Key code of the arrow keys. Up arrow key: 38, Down arrow key: 40, left arrow key: 37, right arrow key: 39
+  if (key === 'w' && !knight.walls[0]) {
+    knight = grid[index(knight.c, knight.r-1)]; //for these lines of code, the browser checks if any of the "wdsa" keys have been pressed, and if they are pressed, the knight character moves in the corresponding direction. "knight.walls" means if it is touching the wall go -1 direction, meaning that you do not pass the wall
+    console.log("W");
+  }else if (key === 'd' && !knight.walls[1]) {
+    knight = grid[index(knight.c+1, knight.r)];
+    console.log("D");
+  }else if (key === 's' && !knight.walls[2]) {
+    knight = grid[index(knight.c, knight.r+1)];
+    console.log("S");
+  }else if (key === 'a' && !knight.walls[3]) {
+    knight = grid[index(knight.c-1, knight.r)];
+    console.log("A");
   }
 
-  } document.onkeydown = anim;
+  if (knight === relic) {
+    alert("You have retrieved the relic. Your quest is complete.")
+  }
 }
