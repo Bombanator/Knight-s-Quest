@@ -21,9 +21,9 @@ function setup() {
       grid.push(cell);
     }
   }
-  current = grid[0]; //has to do with where the maze starts and ends
-  knight = grid[0];
-  relic = grid[index(14,14)];
+  current = grid[0]; //current cell visited starts at the top of the grid (origin, which is point 0)
+  knight = grid[0]; //same for knight
+  relic = grid[index(15,15)]; //the relic is found at the bottom right of the grid
 }
 
 function index(c, r) { //shortcut
@@ -133,7 +133,7 @@ function Cell(c, r) {
   }
 
   this.visible = function() { //this makes the knight (player) character visible
-    if(allVisited()) {
+    if(allVisited()) { //the knight character is only visible when all cells are visited
       var x = this.c*d;
       var y = this.r*d;
 
