@@ -16,7 +16,7 @@ function setup() {
   steps = 0;
   cols = floor(width/d); //width of the canvas divided by the width equals number of columns: number of square cells at the top/same for height
   rows = floor(height/d); //floor deals with math, makes the console know we are dealing with intergers, numbers are integers
-  frameRate(-60)//how fast the maze is generated
+  frameRate(-400)//how fast the maze is generated
 
   for (var r = 0; r < rows; r++) {   //row generator
     for (var c = 0; c < cols; c++) { //column generator
