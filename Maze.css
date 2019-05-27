@@ -11,23 +11,26 @@ body {
 }
 
 h1 {
-  width: 50%;
+  /*width: 50%;*/
   position: relative;
-  left: 50%;
-  margin-left: -17.9%;
-
+  /*left: 50%;*/
+  margin: auto;
+  text-align: center;
+  padding-bottom: 1.25%;
+  padding-top: 1.5%;
 }
 
 h3 {
-  width: 50%;
+  /*width: 50%;*/
   position: relative;
-  left: 50%;
-  margin-left: -12.5%;
-
+  /*left: 50%;*/
+  margin: auto;
+  text-align: center;
 }
 
 li {
-  margin: 15px 0;
+  margin: 1.5%;
+  font-size: 70%;
 }
 
 .Instructions {
@@ -36,13 +39,11 @@ li {
   border-style: double;
   color: White;
   text-shadow: 3px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
-  padding-left: 16px;
-  margin-right: 5px;
-  margin-left: 4px;
-  margin-top: 25px;
-  margin-bottom: 25px;
-  position: static;
-  font-size: 70%;
+  margin: auto;
+  width: 50%;
+  margin-top: 4%;
+  margin-bottom: 4%;
+  position: relative;
 }
 
 #InstructionsTitle {
@@ -52,7 +53,8 @@ li {
 #defaultCanvas0 { /*I looked at my html file on the browser's inspect function, and I saw that the javascript canvas had an id called defaultCanvas0, I can use that id to make css changes to the canvas, such as centerizing it. */
   border: 1px solid #000000;
   position: relative;
-  z-index: 0;
-  left: 50%;
-  margin-left: -15.5%;
+  position:absolute;
+  top:0;bottom:0;right:0;left:0;
+  margin:auto;
+  margin-top: 20%;
 }
