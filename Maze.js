@@ -1,3 +1,4 @@
+//most of this code I learned from this video series: https://www.youtube.com/watch?v=HyK_Q5rrcr4&feature=youtu.be (Part 1 to 4)
 var cols, rows;
 var d = 25; //This is the dimenstion of the cell (width and height). Cells are a square, meaning they have equal dimensions. If their width/height is 40, that mean there are 10 cells per column and row. d means dimension of cell
 var grid = [];
@@ -9,8 +10,8 @@ var relic; //the end goal (ending point)
 
 var highlightShow = true; //we want the cursor highlight to show at first, but once the maze is generated, we want it to go away
 
-
-function setup() {
+//code sourced from https://www.youtube.com/watch?v=HyK_Q5rrcr4&feature=youtu.be (from Part 1 to 4 of the series)
+function setup() {//setup: makes the canvas
   createCanvas(400, 400); //a p5 only function
   //img = loadImage("https://www.pixilart.com/images/art/6cb07882c773d2c.png?v=1541820224"); this did not work
   steps = 0;
@@ -29,6 +30,7 @@ function setup() {
   relic = grid[index(15,15)]; //the relic is found at the bottom right of the grid
 }
 
+//code sourced from https://www.youtube.com/watch?v=HyK_Q5rrcr4&feature=youtu.be (from Part 1 to 4 of the series)
 function index(c, r) { //shortcut
   if (c < 0 || r < 0 || c > cols-1 || r > rows-1) {  //invalid index values: if the currently visited cell is on an edge of the grid, it will not have 4 neighbors, it will have only 3
     return -1;
@@ -36,6 +38,7 @@ function index(c, r) { //shortcut
   return c + r * cols;
 }
 
+//code sourced from https://www.youtube.com/watch?v=HyK_Q5rrcr4&feature=youtu.be (from Part 1 to 4 of the series)
 function draw() { //a p5 only function
   background(51); //colour of grid background (grey)
   for (var c = 0; c < grid.length; c++) {
@@ -59,7 +62,8 @@ function draw() { //a p5 only function
   }
 }
 
-function Cell(c, r) {
+//code sourced from https://www.youtube.com/watch?v=HyK_Q5rrcr4&feature=youtu.be (from Part 1 to 4 of the series)
+function Cell(c, r) {//defines each cell block on grid
   this.c = c;
   this.r = r;
   this.walls = [true, true, true, true]; //true means wall is there. Now every cell starts off with all its walls being shown. Order of walls is top right bottom left.
@@ -124,6 +128,7 @@ function Cell(c, r) {
     }
   }
 
+//code sourced from: https://codepen.io/neeraj08/pen/NbzPmE?editors=0010, a maze game by Neeraj Lakhotia
   this.highlight = function() { //cursor: the current cell being visited
     if (highlightShow){ //when highlightShow is not true anymore it will not show anymore.
       var x = this.c*d;
@@ -135,7 +140,8 @@ function Cell(c, r) {
     }
   }
 
-  this.visible = function() { //this makes the knight (player) character visible
+//code sourced from: https://codepen.io/neeraj08/pen/NbzPmE?editors=0010, a maze game by Neeraj Lakhotia
+  this.visible = function() { //this makes the knight (player) character visible. It is in the "cell function" because the knight appears in cell
     if(allVisited()) { //the knight character is only visible when all cells are visited
       var x = this.c*d;
       var y = this.r*d;
@@ -147,7 +153,8 @@ function Cell(c, r) {
     }
   }
 
-  this.visible1 = function() { //this makes the relic (end point) visible
+//code sourced from: https://codepen.io/neeraj08/pen/NbzPmE?editors=0010, a maze game by Neeraj Lakhotia
+  this.visible1 = function() { //this makes the relic (end point) visible. It is in the "cell function" because the relic appears a cell
     if(allVisited()) {
       var x = this.c*d;
       var y = this.r*d;
@@ -159,6 +166,7 @@ function Cell(c, r) {
   }
 }
 
+//code sourced from: https://codepen.io/neeraj08/pen/NbzPmE?editors=0010, a maze game by Neeraj Lakhotia
 backTrack = function() { //recursive backtracking code
   if (!allVisited()) {
     stack.pop();
@@ -168,6 +176,7 @@ backTrack = function() { //recursive backtracking code
   }
 }
 
+//code sourced from: https://codepen.io/neeraj08/pen/NbzPmE?editors=0010, a maze game by Neeraj Lakhotia
 allVisited = function() { //makes player and relic appear by saying all cells are checked.
   var completed = true;
   for (var c = 0; c < grid.length-1; c++) {
@@ -183,7 +192,7 @@ allVisited = function() { //makes player and relic appear by saying all cells ar
 }
 
 
-
+//code sourced from: https://www.youtube.com/watch?v=HyK_Q5rrcr4&feature=youtu.be (from Part 1 to 4 of the series)
 removeLine = function(a, b) {  // two adjacent cells
   var x = a.c - b.c; //if we have 2 cells next to each other from their sides, this means in order to remove walls, we have to take the left wall out of the first cell and the right wall of the adjacent (second) cell
   if (x === 1) { //in order for x to equal one, we have to make the x value equal one, we need to take the column (c) value of the "a" cell (which is bigger, because it is the adjacent cell on the left) and subtract it by the column (c) value of the "b" cell. The value of x is the difference between cell a and b
@@ -205,7 +214,8 @@ removeLine = function(a, b) {  // two adjacent cells
 }
 
 
-//motion
+//code sourced from: https://codepen.io/neeraj08/pen/NbzPmE?editors=0010, a maze game by Neeraj Lakhotia
+//motion of player object
 function keyTyped() { //alert(e.keyCode); I used this code to find out the Key code of the arrow keys. Up arrow key: 38, Down arrow key: 40, left arrow key: 37, right arrow key: 39
   if (key === 'w' && !knight.walls[0]) {
     knight = grid[index(knight.c, knight.r-1)]; //for these lines of code, the browser checks if any of the "wdsa" keys have been pressed, and if they are pressed, the knight character moves in the corresponding direction. "knight.walls" means if it is touching the wall go -1 direction, meaning that you do not pass the wall
